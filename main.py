@@ -5,14 +5,14 @@ from creature import Creature
 pygame.init()
 
 # Defining colors to be used in the display
-BLUE  = (0, 0, 255)
 RED   = (255, 0, 0)
 GREEN = (0, 255, 0)
+BLUE  = (0, 0, 255)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-WIDTH = 500
-HEIGHT = 500
+WIDTH = 1000
+HEIGHT = 1000
 FPS = 60
 
 # Starting Creature parameters
