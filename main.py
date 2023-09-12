@@ -1,27 +1,38 @@
 import pygame
 from pygame.locals import *
 import numpy as np
+import logging
 from creature import Creature
 
-pygame.init()
+'''
+DEBUG   Detailed information, typically of interest only when diagnosing problems.
+INFO    Confirmation that things are working as expected.
+WARNING An indication that something unexpected happened, or indicative of some problem in the near future
+ERROR   Due to a more serious problem, the software has nt been able to perform some function
+CRITICAL    A serious error, indicating that the program itself may be unable to continue running.
+'''
 
-# Defining colors to be used in the display
+logging.basicConfig(filename='logfile.log', level=logging.INFO)
+
+# Define the display parameters
+WIDTH = 1000
+HEIGHT = 1000
+FPS = 60
+
+# Define colors to be used in the display
 RED   = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE  = (0, 0, 255)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-WIDTH = 1000
-HEIGHT = 1000
-FPS = 60
-
-# Starting Creature parameters
+# Define Creature parameters
 STARTING_BLUE_CREATURES = 15
 STARTING_RED_CREATURES = 15
 STARTING_GREEN_CREATURES = 15
 
 # Initialize the game environment
+pygame.init()
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Life Simulator")
 
@@ -33,6 +44,7 @@ class BlueCreature(Creature):
         Creature.__init__(self, (0, 0, 255), x_boundary, y_boundary)
 
     def __add__ (self, other_creature):
+        logging.info('Creature add op: {}'.format(str(self.color), str(other_creature.color)))
         if other_creature.color == (255, 0, 0):
             self.size -= other_creature.size
             other_creature.size -= self.size
@@ -61,10 +73,12 @@ def is_touching(c1, c2):
 
 def handle_collisions(creature_list):
     blues, reds, greens = creature_list
+    new_creature_dicts = []
 
     for blue_id, blue_creature in blues.copy().items():
         for other_creatures in blues, reds, greens:
             for other_creature_id, other_creature in other_creatures.copy().items():
+                logging.debug('Checking if creatures touching {} + {}'.format(str(blue_creature.color), str(other_creature.color)))
                 if blue_creature == other_creature:
                     pass
                 else:

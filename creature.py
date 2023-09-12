@@ -15,6 +15,18 @@ class Creature:
         self.size = random.randrange(size_range[0], size_range[1])
         self.movement_range = movement_range
 
+    def __repr__(self):
+        return 'Creature({},{}.({},{}))'.format(self.color,
+                                                self.size,
+                                                self.x,
+                                                self.y)
+    
+    def __str__(self):
+        return "Color: {} creature object of size {}. Located at {},{}".format(self.color,
+                                                                              self.size,
+                                                                              self.x,
+                                                                              self.y)
+
     def move(self):
         self.move_x = random.randrange(self.movement_range[0], self.movement_range[1])
         self.move_y = random.randrange(self.movement_range[0], self.movement_range[1])
