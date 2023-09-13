@@ -2,7 +2,9 @@ import pygame
 from pygame.locals import *
 import numpy as np
 import logging
+import math
 from creature import Creature
+from Advanced_creature import AdvancedCreature
 
 '''
 DEBUG   Detailed information, typically of interest only when diagnosing problems.
@@ -17,7 +19,7 @@ logging.basicConfig(filename='logfile.log', level=logging.INFO)
 # Define the display parameters
 WIDTH = 1000
 HEIGHT = 1000
-FPS = 60
+FPS = 30
 
 # Define colors to be used in the display
 RED   = (255, 0, 0)
@@ -27,9 +29,10 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Define Creature parameters
-STARTING_BLUE_CREATURES = 15
-STARTING_RED_CREATURES = 15
-STARTING_GREEN_CREATURES = 15
+STARTING_BLUE_CREATURES = 0
+STARTING_RED_CREATURES = 0
+STARTING_GREEN_CREATURES = 0
+STARTING_ADV_CREATURES = 10
 
 # Initialize the game environment
 pygame.init()
@@ -38,6 +41,7 @@ pygame.display.set_caption("Life Simulator")
 
 clock = pygame.time.Clock()
 
+# OBJECTS
 
 class BlueCreature(Creature):
     def __init__(self, x_boundary, y_boundary):
@@ -64,7 +68,7 @@ class RedCreature(Creature):
 
 class GreenCreature(Creature):
     def __init__(self, x_boundary, y_boundary):
-        Creature.__init__(self, (0, 255, 0), x_boundary, y_boundary)
+        Creature.__init__(self, (0, 255, 0), x_boundary, y_boundary, movement_range=(-0.01, .01))
 
 
 
@@ -72,43 +76,43 @@ def is_touching(c1, c2):
     return np.linalg.norm(np.array([c1.x, c1.y])-np.array([c2.x, c2.y])) < (c1.size + c2.size)
 
 def handle_collisions(creature_list):
-    blues, reds, greens = creature_list
-    new_creature_dicts = []
 
-    for blue_id, blue_creature in blues.copy().items():
-        for other_creatures in blues, reds, greens:
-            for other_creature_id, other_creature in other_creatures.copy().items():
-                logging.debug('Checking if creatures touching {} + {}'.format(str(blue_creature.color), str(other_creature.color)))
-                if blue_creature == other_creature:
-                    pass
-                else:
-                    if is_touching(blue_creature, other_creature):
-                        blue_creature + other_creature
-                        if other_creature.size <= 0:
-                            del other_creatures[other_creature_id]
-                        if blue_creature.size <= 0:
-                            del blues[blue_id]
-    return blues, reds, greens
+    for creature in creature_list:
+        for other_creature in creature_list:
+            logging.debug('Checking if creatures touching {} + {}'.format(str(creature.color), str(other_creature.color)))
+            if is_touching(creature, other_creature):
+                # Eat other creature
+                if creature.stomach_volume_remaining > other_creature.size:
+                    creature.stomach_volume_remaining += other_creature.size
+                    del other_creature
+
+    return creature_list
 
 def draw_environment(creature_list):
     display.fill(WHITE)
-    blues, reds, greens = handle_collisions(creature_list)
+    #handle_collisions(creature_list)
 
     for creature_dict in creature_list:
         for creature_id in creature_dict:
             creature = creature_dict[creature_id]
             pygame.draw.circle(display, creature.color, [creature.x, creature.y], creature.size)
             creature.move()
-            creature.check_bounds()
+            creature.check_bounds()    
     
     pygame.display.update()
-    return blues, reds, greens
+    return creature_list
 
 def main():
     blue_creatures = dict(enumerate([BlueCreature(WIDTH, HEIGHT) for i in range(STARTING_BLUE_CREATURES)]))
     red_creatures = dict(enumerate([RedCreature(WIDTH, HEIGHT) for i in range(STARTING_RED_CREATURES)]))
     green_creatures = dict(enumerate([GreenCreature(WIDTH, HEIGHT) for i in range(STARTING_GREEN_CREATURES)]))
-
+    
+    advanced_creatures = dict(enumerate([AdvancedCreature(metabolism= 0,
+                                                            size= 1,
+                                                            move_speed= (1, 1, 1,),
+                                                            color= (0, 255, 0),
+                                                            x_boundary= WIDTH,
+                                                            y_boundary= HEIGHT) for i in range(STARTING_ADV_CREATURES)]))
     # Game loop begins
     while True: 
         # code goes here
@@ -118,7 +122,7 @@ def main():
                 return
         #pygame.display.update() 
 
-        blue_creatures, red_creatures, green_creatures = draw_environment([blue_creatures, red_creatures, green_creatures])
+        draw_environment([advanced_creatures])
         clock.tick(FPS)
 
 if __name__ == '__main__':

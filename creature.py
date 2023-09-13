@@ -5,14 +5,14 @@ class Creature:
                 color,
                 x_boundary,
                 y_boundary,
-                size_range=(4, 8),
-                movement_range=(-1, 2)):
+                size_range=(1, 10),
+                movement_range=(-10.0, 10.0)):
         self.color = color
         self.x_boundary = x_boundary
         self.y_boundary = y_boundary
         self.x = random.randrange(0, x_boundary)
         self.y = random.randrange(0, y_boundary)
-        self.size = random.randrange(size_range[0], size_range[1])
+        self.size = random.uniform(size_range[0], size_range[1])
         self.movement_range = movement_range
 
     def __repr__(self):
@@ -28,8 +28,8 @@ class Creature:
                                                                               self.y)
 
     def move(self):
-        self.move_x = random.randrange(self.movement_range[0], self.movement_range[1])
-        self.move_y = random.randrange(self.movement_range[0], self.movement_range[1])
+        self.move_x = random.uniform(self.movement_range[0], self.movement_range[1])
+        self.move_y = random.uniform(self.movement_range[0], self.movement_range[1])
         self.x += self.move_x
         self.y += self.move_y
 
