@@ -29,9 +29,9 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Define Creature parameters
-STARTING_BLUE_CREATURES = 0
-STARTING_RED_CREATURES = 0
-STARTING_GREEN_CREATURES = 0
+STARTING_BLUE_CREATURES = 10
+STARTING_RED_CREATURES = 10
+STARTING_GREEN_CREATURES = 10
 STARTING_ADV_CREATURES = 10
 
 # Initialize the game environment
@@ -70,16 +70,26 @@ class GreenCreature(Creature):
     def __init__(self, x_boundary, y_boundary):
         Creature.__init__(self, (0, 255, 0), x_boundary, y_boundary, movement_range=(-0.01, .01))
 
+class BlackCreature(AdvancedCreature):
+    def __init__(self, x_boundary, y_boundary):
+        AdvancedCreature.__init__(self,
+                                    metabolism= 0,
+                                    size= 10,
+                                    move_speed= (1, 1, 1),
+                                    color= BLACK,
+                                    x_boundary= x_boundary,
+                                    y_boundary= y_boundary)
+
 
 
 def is_touching(c1, c2):
     return np.linalg.norm(np.array([c1.x, c1.y])-np.array([c2.x, c2.y])) < (c1.size + c2.size)
 
 def handle_collisions(creature_list):
-
+    print(creature_list)
     for creature in creature_list:
         for other_creature in creature_list:
-            logging.debug('Checking if creatures touching {} + {}'.format(str(creature.color), str(other_creature.color)))
+            #logging.debug('Checking if creatures touching {} + {}'.format(str(creature.color), str(other_creature.color)))
             if is_touching(creature, other_creature):
                 # Eat other creature
                 if creature.stomach_volume_remaining > other_creature.size:
@@ -107,12 +117,7 @@ def main():
     red_creatures = dict(enumerate([RedCreature(WIDTH, HEIGHT) for i in range(STARTING_RED_CREATURES)]))
     green_creatures = dict(enumerate([GreenCreature(WIDTH, HEIGHT) for i in range(STARTING_GREEN_CREATURES)]))
     
-    advanced_creatures = dict(enumerate([AdvancedCreature(metabolism= 0,
-                                                            size= 1,
-                                                            move_speed= (1, 1, 1,),
-                                                            color= (0, 255, 0),
-                                                            x_boundary= WIDTH,
-                                                            y_boundary= HEIGHT) for i in range(STARTING_ADV_CREATURES)]))
+    black_creatures = dict(enumerate([BlackCreature(WIDTH, HEIGHT) for i in range(STARTING_ADV_CREATURES)]))
     # Game loop begins
     while True: 
         # code goes here
@@ -120,9 +125,9 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 return
-        #pygame.display.update() 
+        pygame.display.update() 
 
-        draw_environment([advanced_creatures])
+        draw_environment([black_creatures, blue_creatures, red_creatures, green_creatures])
         clock.tick(FPS)
 
 if __name__ == '__main__':
