@@ -81,26 +81,49 @@ class BlackCreature(AdvancedCreature):
                                     y_boundary= y_boundary)
 
 
+def log_creatures(creature_list):
+    print(creature_list)
+    #for index in range (0, len(creature_list)):
+        #print(repr(creature_list[index]))
 
 def is_touching(c1, c2):
     return np.linalg.norm(np.array([c1.x, c1.y])-np.array([c2.x, c2.y])) < (c1.size + c2.size)
 
 def handle_collisions(creature_list):
-    print(creature_list)
+    log_creatures(creature_list)
+
+    print("\nSTART\n")
+    creature_num = 0
+    #for species in creature_list:
+        #print(f"Species: {species}")
+
+
     for creature in creature_list:
-        for other_creature in creature_list:
+        print(f"Creature: {creature_num}, \n{creature}")
+        creature_num += 1
+        other_creature_num = 0
+        for other_creature in creature:
+            print(f"Other Creature: {other_creature_num}, {other_creature}")
+            other_creature_num += 1
             #logging.debug('Checking if creatures touching {} + {}'.format(str(creature.color), str(other_creature.color)))
+            '''
             if is_touching(creature, other_creature):
                 # Eat other creature
                 if creature.stomach_volume_remaining > other_creature.size:
                     creature.stomach_volume_remaining += other_creature.size
                     del other_creature
+            '''
+
+# currently pulling list and no the individual creatures. 
+
+    print("\nEND\n")
 
     return creature_list
 
 def draw_environment(creature_list):
     display.fill(WHITE)
-    #handle_collisions(creature_list)
+    handle_collisions(creature_list)
+    #log_creatures(creature_list)
 
     for creature_dict in creature_list:
         for creature_id in creature_dict:
@@ -116,8 +139,8 @@ def main():
     blue_creatures = dict(enumerate([BlueCreature(WIDTH, HEIGHT) for i in range(STARTING_BLUE_CREATURES)]))
     red_creatures = dict(enumerate([RedCreature(WIDTH, HEIGHT) for i in range(STARTING_RED_CREATURES)]))
     green_creatures = dict(enumerate([GreenCreature(WIDTH, HEIGHT) for i in range(STARTING_GREEN_CREATURES)]))
-    
     black_creatures = dict(enumerate([BlackCreature(WIDTH, HEIGHT) for i in range(STARTING_ADV_CREATURES)]))
+
     # Game loop begins
     while True: 
         # code goes here

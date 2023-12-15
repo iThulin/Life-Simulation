@@ -16,7 +16,7 @@ class Creature:
         self.movement_range = movement_range
 
     def __repr__(self):
-        return 'Creature({},{}.({},{}))'.format(self.color,
+        return 'Creature({}, {}. ({}, {}))\n'.format(self.color,
                                                 self.size,
                                                 self.x,
                                                 self.y)

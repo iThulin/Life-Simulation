@@ -24,13 +24,14 @@ class AdvancedCreature:
         self.y = random.randrange(0, y_boundary)
 
     def __repr__(self):
-        return 'Creature({},{}.({},{}))'.format(self.color,
-                                                self.size,
-                                                self.x,
-                                                self.y)
+        return '\nADV_C( rgb:{}, s: {}, m: {},  x,y: ({}, {}))'.format(self.color,
+                                                                        self.size,
+                                                                        self.metabolism,
+                                                                        self.x,
+                                                                        self.y)
     
     def __str__(self):
-        return "Color: {} creature object of size {}. Located at {},{}".format(self.color,
+        return "Color: {}, creature object of size {}. Located at {},{}".format(self.color,
                                                                               self.size,
                                                                               self.x,
                                                                               self.y)
@@ -44,9 +45,9 @@ class AdvancedCreature:
         if keys[pygame.K_RIGHT]:
             self.x += self.move_speed[1]
         if keys[pygame.K_UP]:
-            self.y += self.move_speed[0]
-        if keys[pygame.K_DOWN]:
             self.y -= self.move_speed[0]
+        if keys[pygame.K_DOWN]:
+            self.y += self.move_speed[0]
         
 
     def check_bounds(self):
