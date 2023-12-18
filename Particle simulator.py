@@ -5,16 +5,18 @@ import random
 import logging
 import math
 from particle import Particle
+from datetime import datetime
 
 '''
 DEBUG   Detailed information, typically of interest only when diagnosing problems.
 INFO    Confirmation that things are working as expected.
 WARNING An indication that something unexpected happened, or indicative of some problem in the near future
-ERROR   Due to a more serious problem, the software has nt been able to perform some function
+ERROR   Due to a more serious problem, the software has not been able to perform some function
 CRITICAL    A serious error, indicating that the program itself may be unable to continue running.
 '''
 
-logging.basicConfig(filename='logfile.log', level=logging.INFO)
+LOG_FILENAME = datetime.now().strftime('Logs\logfile_%H_%M_%d.%m.%Y.log')
+logging.basicConfig(filename=LOG_FILENAME, filemode='w', level=logging.INFO)
 
 # Define the display parameters
 WIDTH = 1000
@@ -43,8 +45,8 @@ clock = pygame.time.Clock()
 # METHODS
 
 def log_objects(particles):
-    print(particles)
-
+    #print(particles)
+    pass
 
 def is_touching(c1, c2):
     return np.linalg.norm(np.array([c1.x, c1.y])-np.array([c2.x, c2.y])) < (c1.size + c2.size)
@@ -72,18 +74,17 @@ def update_sim(particles):
 def create_particles(particles, num_particles, color, WIDTH, HEIGHT):
 
     if len(particles) == 0:
-        print(particles)
         for _ in range(0, STARTING_PARTICLES):
             particles.append(Particle(STARTING_COLOR,WIDTH, HEIGHT))
-        print(particles)
         for entity in particles:
             pygame.draw.circle(display, color, (int(entity.x), int(entity.y)), entity.size)
+            logging.info('Initial particle %s', entity.color)
     else:
         for _ in range (0, num_particles - len(particles)):
             new_particle = Particle(color,WIDTH, HEIGHT)
             particles.append(new_particle)
             pygame.draw.circle(display, new_particle.color, (int(new_particle.x), int(new_particle.y)), new_particle.size)
-    
+            logging.info('Added particle %s', new_particle.color)
     return particles
 
 
