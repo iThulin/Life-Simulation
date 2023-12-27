@@ -64,7 +64,7 @@ def handle_collisions(particles):
 
 def update_sim(particles):
     for particle in particles:
-        particle.update()
+        particle.move()
         pygame.draw.circle(display, particle.color, (particle.x, particle.y), particle.size)
 
     pygame.display.update()
